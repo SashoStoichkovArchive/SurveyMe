@@ -15,6 +15,7 @@ public class SurveyEntity {
     @GenericGenerator(name = "uuid", strategy = "uuid")
     private UUID id;
     private String name;
+    private String description;
 
     @OneToMany(fetch = FetchType.EAGER)
     private Set<QuestionEntity> questions;
@@ -39,6 +40,14 @@ public class SurveyEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Set<QuestionEntity> getQuestions() {

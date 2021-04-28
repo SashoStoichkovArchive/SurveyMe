@@ -9,9 +9,8 @@ import survey_me.entity.SurveyEntity;
 import survey_me.entity.UserEntity;
 import survey_me.repository.UserRepository;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("user")
@@ -30,23 +29,27 @@ public class UserController {
         model.addAttribute("user", user);
 
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-
-        System.out.println(user);
-
         userRepository.save(user);
 
         return "user/registerSuccess";
     }
 
-    @GetMapping(path = "/surveys/{username}")
-    public Set<SurveyEntity> getSurveys(@PathVariable String username) {
+    @GetMapping(path = "/profile/{username}")
+    public String getSurveys(@PathVariable String username, Model model) {
         Optional<UserEntity> possibleUser = userRepository.findByUsername(username);
 
-        return possibleUser.map(UserEntity::getSurveys).orElse(null);
-    }
+        if (possibleUser.isPresent()) {
+            UserEntity user = possibleUser.get();
 
-    @GetMapping(path = "/stats/{id}")
-    public void func(@PathVariable UUID id) {
+            List<SurveyEntity> surveys = user.getSurveys().stream()
+                    .filter(SurveyEntity::getPublic).collect(Collectors.toList());
 
+            model.addAttribute("user", user);
+            model.addAttribute("surveys", surveys);
+
+            return "user/profile";
+        }
+
+        return "error";
     }
 }

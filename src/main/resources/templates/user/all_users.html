@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>SurveyMe Home</title>
+    <title>All Users - SurveyMe</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -24,8 +24,19 @@
             </ul>
         </div>
     </nav>
-    <div class="container">
-        <h1 class="title">Welcome to SurveyMe</h1>
+    <div class="container mt-5">
+        <div class="row row-cols-1 row-cols-md-3">
+            <div class="col mb-4" th:each="user: ${users}">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${user.getFullName()}"></h5>
+                        <h6 class="card-subtitle mb-2 text-muted" th:text="${user.getEmail()}"></h6>
+                        <a class="card-link" th:text="${user.getSurveys().size() + ' Surveys'}"></a>
+                        <a th:href="@{/user/profile/{username}(username=${user.getUsername()})}" class="card-link">View profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
