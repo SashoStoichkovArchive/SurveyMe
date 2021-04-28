@@ -1,10 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Create Survey - SurveyMe</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+
+        function addAnswer(questionNumber, answerNumber) {
+            let parentDiv = $("#answer-add-" + (questionNumber) + "-" + (answerNumber-1)).parent('div').parent('div');
+            parentDiv.append("<div class=\"input-group\">\n" +
+                "                            <input\n" +
+                "                                type=\"text\"\n" +
+                "                                class=\"form-control\"\n" +
+                "                                id=\"answer-" + (questionNumber) + "-" + (answerNumber) + "\"\n" +
+                "                                placeholder=\"Enter Answer " + (answerNumber) + "\"\n" +
+                "                            >\n" +
+                "                            <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"answer-add-" + (questionNumber) + "-" + (answerNumber) + "\" onclick=\"addAnswer(" + (questionNumber) + ", " + (answerNumber+1) + ")\">Add answer</button>\n" +
+                "                        </div>");
+
+            $("#answer-add-" + (questionNumber) + "-" + (answerNumber-1)).remove();
+        }
+
+        function addQuestion(questionNumber) {
+            let parentDiv = $('#question-add-' + (questionNumber-1)).parent('div').parent('div').parent('div');
+            parentDiv.append("<div class=\"form-group\">\n" +
+                "                    <label for=\"question-title-" + (questionNumber) + "\">Question " + (questionNumber) + "</label>\n" +
+                "                    <div class=\"input-group\">\n" +
+                "                        <input\n" +
+                "                            type=\"text\"\n" +
+                "                            class=\"form-control\"\n" +
+                "                            id=\"question-title-" + (questionNumber) + "\"\n" +
+                "                            placeholder=\"Enter Question " + (questionNumber) + "\"\n" +
+                "                        >\n" +
+                "                        <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"question-add-" + (questionNumber) + "\" onclick=\"addQuestion(" + (questionNumber+1) + ")\">Add question</button>\n" +
+                "                    </div>\n" +
+                "\n" +
+                "                    <div class=\"form-check form-check-inline\">\n" +
+                "                        <input class=\"form-check-input\" type=\"checkbox\" id=\"required\" value=\"required-" + (questionNumber) + "\">\n" +
+                "                        <label class=\"form-check-label\" for=\"required\">Required</label>\n" +
+                "                    </div>\n" +
+                "                    <div class=\"form-check form-check-inline\">\n" +
+                "                        <input class=\"form-check-input\" type=\"checkbox\" id=\"multiple\" value=\"multiple-" + (questionNumber) + "\">\n" +
+                "                        <label class=\"form-check-label\" for=\"multiple\">Multiple</label>\n" +
+                "                    </div>\n" +
+                "\n" +
+                "                    <div class=\"answers\">\n" +
+                "                        <div class=\"input-group\">\n" +
+                "                            <input\n" +
+                "                                type=\"text\"\n" +
+                "                                class=\"form-control\"\n" +
+                "                                id=\"answer-" + (questionNumber) + "-1\"\n" +
+                "                                placeholder=\"Enter Answer 1\"\n" +
+                "                            >\n" +
+                "                            <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"answer-add-" + (questionNumber) + "-1\" onclick=\"addAnswer(" + (questionNumber) + ", 2)\">Add answer</button>\n" +
+                "                        </div>\n" +
+                "                    </div>\n" +
+                "                </div>");
+
+            $('#question-add-' + (questionNumber-1)).remove();
+        }
+    </script>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">SurveyMe</a>
 
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/register">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/all/users">All Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/all/surveys">All Surveys</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/survey/create">Create Survey</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5 mb-5">
+        <h1>Create survey!</h1>
+        <form action="#" th:action="@{/survey/create}" th:object="${survey}" method="post">
+            <div class="form-group">
+                <label for="survey-title">Survey title</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="survey-title"
+                        placeholder="Enter survey title"
+                        th:field="*{name}"
+                >
+
+                <label for="survey-description">Survey description</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="survey-description"
+                        placeholder="Enter survey description"
+                        th:field="*{description}"
+                >
+            </div>
+
+            <h3>Add questions</h3>
+
+            <div class="questions">
+                <div class="form-group">
+                    <label for="question-title-1">Question 1</label>
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="question-title-1"
+                            placeholder="Enter Question 1"
+                        >
+                        <button class="btn btn-outline-secondary" type="button" id="question-add-1" onclick="addQuestion(2)">Add question</button>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="required" value="required-1">
+                        <label class="form-check-label" for="required">Required</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="multiple" value="multiple-1">
+                        <label class="form-check-label" for="multiple">Multiple</label>
+                    </div>
+
+                    <div class="answers">
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="answer-1-1"
+                                placeholder="Enter Answer 1"
+                            >
+                            <button class="btn btn-outline-secondary" type="button" id="answer-add-1-1" onclick="addAnswer(1, 2)">Add answer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-check form-switch form-check-inline">
+                <input class="form-check-input" type="checkbox" id="public" checked>
+                <label class="form-check-label" for="public">Public</label>
+            </div>
+            <div class="form-check form-switch form-check-inline">
+                <input class="form-check-input" type="checkbox" id="closed">
+                <label class="form-check-label" for="closed">Closed</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 </body>
 </html>

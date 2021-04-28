@@ -15,21 +15,21 @@ public class SurveyController {
     @Autowired
     private SurveyRepository surveyRepository;
 
-//    @GetMapping(path = "/create")
-//    public String createSurveyForm(Model model) {
-//        model.addAttribute("survey", new SurveyEntity());
-//        return "survey/survey_create";
-//    }
-//
-//    @PostMapping(path = "/create")
-//    public String createSurvey(@ModelAttribute SurveyEntity survey, Model model){
-//        model.addAttribute("survey", survey);
-//
-//        survey.setId(UUID.randomUUID());
-//        surveyRepository.save(survey);
-//
-//        return "user/all_users";
-//    }
+    @GetMapping(path = "/create")
+    public String createSurveyForm(Model model) {
+        model.addAttribute("survey", new SurveyEntity());
+        return "survey/survey_create";
+    }
+
+    @PostMapping(path = "/create")
+    public String createSurvey(@ModelAttribute SurveyEntity survey, Model model){
+        model.addAttribute("survey", survey);
+
+        survey.setId(UUID.randomUUID());
+        surveyRepository.save(survey);
+
+        return "redirect:";
+    }
 
 //    @PostMapping(path = "/edit/{id}")
 //    some func

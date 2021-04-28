@@ -21,7 +21,7 @@ public class SurveyEntity {
     private Set<QuestionEntity> questions;
 
     private Boolean isClosed = Boolean.FALSE;
-    private Boolean isPublic = Boolean.FALSE;
+    private Boolean isPublic = Boolean.TRUE;
 
     public SurveyEntity() {
     }

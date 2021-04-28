@@ -19,11 +19,18 @@
                     <a class="nav-link" href="/user/register">Register</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/all-users">All Users</a>
+                    <a class="nav-link" href="/all/users">All Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/all/surveys">All Surveys</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/survey/create">Create Survey</a>
                 </li>
             </ul>
         </div>
     </nav>
+
     <div class="container mt-5">
         <div class="row row-cols-1 row-cols-md-3">
             <div class="col mb-4" th:each="user: ${users}">
