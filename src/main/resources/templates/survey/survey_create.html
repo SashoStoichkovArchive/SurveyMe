@@ -43,12 +43,12 @@
                 "                    </div>\n" +
                 "\n" +
                 "                    <div class=\"form-check form-check-inline\">\n" +
-                "                        <input class=\"form-check-input\" type=\"checkbox\" id=\"required\" value=\"required-" + (questionNumber) + "\">\n" +
-                "                        <label class=\"form-check-label\" for=\"required\">Required</label>\n" +
+                "                        <input class=\"form-check-input\" type=\"checkbox\" id=\"required-" + (questionNumber) + "\">\n" +
+                "                        <label class=\"form-check-label\" for=\"required-" + (questionNumber) + "\">Required</label>\n" +
                 "                    </div>\n" +
                 "                    <div class=\"form-check form-check-inline\">\n" +
-                "                        <input class=\"form-check-input\" type=\"checkbox\" id=\"multiple\" value=\"multiple-" + (questionNumber) + "\">\n" +
-                "                        <label class=\"form-check-label\" for=\"multiple\">Multiple</label>\n" +
+                "                        <input class=\"form-check-input\" type=\"checkbox\" id=\"multiple-" + (questionNumber) + "\">\n" +
+                "                        <label class=\"form-check-label\" for=\"multiple-" + (questionNumber) + "\">Multiple</label>\n" +
                 "                    </div>\n" +
                 "\n" +
                 "                    <div class=\"answers\">\n" +
@@ -66,6 +66,31 @@
 
             $('#question-add-' + (questionNumber-1)).remove();
         }
+
+        function createSurvey(event) {
+            event.preventDefault();
+
+            let data = new Map()
+
+            $('form').find('input').each(function(){
+                var input = $(this);
+                data.set(input.attr('id'), input.val());
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/survey/create",
+                contentType: "application/json; charset=UTF-8",
+                data: JSON.stringify(data),
+                success: function () {
+                    window.location.href = "/";
+                }
+            });
+
+            // console.log(data);
+        }
+
+        document.querySelector('form').addEventListener('submit', createSurvey);
     </script>
 </head>
 <body>
@@ -92,7 +117,8 @@
 
     <div class="container mt-5 mb-5">
         <h1>Create survey!</h1>
-        <form action="#" th:action="@{/survey/create}" th:object="${survey}" method="post">
+<!--        <form action="#" th:action="@{/survey/create}" th:object="${survey}" method="post">-->
+        <form action="/survey/create" method="post">
             <div class="form-group">
                 <label for="survey-title">Survey title</label>
                 <input
@@ -100,7 +126,6 @@
                         class="form-control"
                         id="survey-title"
                         placeholder="Enter survey title"
-                        th:field="*{name}"
                 >
 
                 <label for="survey-description">Survey description</label>
@@ -109,7 +134,6 @@
                         class="form-control"
                         id="survey-description"
                         placeholder="Enter survey description"
-                        th:field="*{description}"
                 >
             </div>
 
@@ -129,12 +153,12 @@
                     </div>
 
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="required" value="required-1">
-                        <label class="form-check-label" for="required">Required</label>
+                        <input class="form-check-input" type="checkbox" id="required-1">
+                        <label class="form-check-label" for="required-1">Required</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="multiple" value="multiple-1">
-                        <label class="form-check-label" for="multiple">Multiple</label>
+                        <input class="form-check-input" type="checkbox" id="multiple-1">
+                        <label class="form-check-label" for="required-1">Multiple</label>
                     </div>
 
                     <div class="answers">
