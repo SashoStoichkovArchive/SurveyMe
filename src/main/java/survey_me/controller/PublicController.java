@@ -40,7 +40,4 @@ public class PublicController {
 
         return "all/surveys";
     }
-
-    // @GetMapping(path = "/list-public")
-    // some func
 }
