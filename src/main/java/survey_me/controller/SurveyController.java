@@ -35,7 +35,7 @@ public class SurveyController {
     public String createSurvey(@ModelAttribute SurveyEntity survey, Model model) {
         model.addAttribute("survey", survey);
 
-        survey.setId(UUID.randomUUID());
+        survey.setId(new Random().nextLong());
         surveyRepository.save(survey);
 
         return "redirect:/question/add/" + survey.getId();
@@ -48,21 +48,26 @@ public class SurveyController {
 //    some func
 
     @GetMapping(path = "/stats/{id}")
-    public String getStatsForSurvey(@PathVariable UUID id, Model model) {
+    public String getStatsForSurvey(@PathVariable Long id, Model model) {
         for (SurveyEntity survey : surveyRepository.findAll()) {
             if (survey.getId().equals(id)) {
-                Set<QuestionEntity> questions = survey.getQuestions();
-                List<AnswerEntity> answers = new ArrayList<>();
+                Optional<Set<QuestionEntity>> possibleQuestions = questionRepository.findAllBySurvey(survey);
 
-                for (QuestionEntity question : questions) {
-                    answers.addAll(question.getAnswers());
+                if (possibleQuestions.isPresent()) {
+                    Set<QuestionEntity> questions = possibleQuestions.get();
+                    Set<AnswerEntity> answers = new HashSet<>();
+
+                    for (QuestionEntity question : questions) {
+                        Optional<Set<AnswerEntity>> possibleAnswers = answerRepository.findAllByQuestion(question);
+                        possibleAnswers.ifPresent(answers::addAll);
+                    }
+
+                    model.addAttribute("survey", survey);
+                    model.addAttribute("questions", questions);
+                    model.addAttribute("answers", answers);
+
+                    return "survey/stats";
                 }
-
-                model.addAttribute("survey", survey);
-                model.addAttribute("questions", questions);
-                model.addAttribute("answers", answers);
-
-                return "survey/stats";
             }
         }
 

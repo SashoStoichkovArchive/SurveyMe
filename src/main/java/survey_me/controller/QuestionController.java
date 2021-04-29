@@ -9,6 +9,7 @@ import survey_me.entity.SurveyEntity;
 import survey_me.repository.QuestionRepository;
 import survey_me.repository.SurveyRepository;
 
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,19 +23,20 @@ public class QuestionController {
     private SurveyRepository surveyRepository;
 
     @GetMapping(path = "/add/{id}")
-    public String addQuestionForm(@PathVariable UUID id, Model model) {
+    public String addQuestionForm(@PathVariable Long id, Model model) {
         model.addAttribute("question", new QuestionEntity());
         model.addAttribute("surveyId", id);
         return "question/add";
     }
 
     @PostMapping(path = "/add/{id}")
-    public String addQuestion(@PathVariable UUID id, @ModelAttribute QuestionEntity question, Model model) {
+    public String addQuestion(@PathVariable Long id, @ModelAttribute QuestionEntity question, Model model) {
         for (SurveyEntity survey : surveyRepository.findAll()) {
             if (survey.getId().equals(id)) {
                 model.addAttribute("question", question);
 
-                question.setId(UUID.randomUUID());
+                question.setId(new Random().nextLong());
+                question.setSurvey(survey);
                 questionRepository.save(question);
 
                 Set<QuestionEntity> questions = survey.getQuestions();

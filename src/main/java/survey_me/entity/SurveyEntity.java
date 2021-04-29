@@ -6,19 +6,19 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
 public class SurveyEntity {
     @Id
-    @GenericGenerator(name = "uuid", strategy = "uuid")
-    private UUID id;
+    private Long id;
     private String name;
     private String description;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private Set<QuestionEntity> questions;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "survey")
+    private Set<QuestionEntity> questions = new HashSet<>();
 
     private Boolean isClosed = false;
     private Boolean isPublic = true;
@@ -26,11 +26,11 @@ public class SurveyEntity {
     public SurveyEntity() {
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

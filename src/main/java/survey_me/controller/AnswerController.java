@@ -6,12 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import survey_me.entity.AnswerEntity;
 import survey_me.entity.QuestionEntity;
-import survey_me.entity.SurveyEntity;
 import survey_me.repository.AnswerRepository;
 import survey_me.repository.QuestionRepository;
 
+import java.util.Random;
 import java.util.Set;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("answer")
@@ -23,7 +22,7 @@ public class AnswerController {
     private AnswerRepository answerRepository;
 
     @GetMapping(path = "/add/{surveyId}/{questionId}")
-    public String addAnswerForm(@PathVariable UUID surveyId, @PathVariable UUID questionId, Model model) {
+    public String addAnswerForm(@PathVariable Long surveyId, @PathVariable Long questionId, Model model) {
         model.addAttribute("answer", new AnswerEntity());
         model.addAttribute("surveyId", surveyId);
         model.addAttribute("questionId", questionId);
@@ -31,12 +30,13 @@ public class AnswerController {
     }
 
     @PostMapping(path = "/add/{surveyId}/{questionId}")
-    public String addAnswer(@PathVariable UUID surveyId, @PathVariable UUID questionId, @ModelAttribute AnswerEntity answer, Model model) {
+    public String addAnswer(@PathVariable Long surveyId, @PathVariable Long questionId, @ModelAttribute AnswerEntity answer, Model model) {
         for (QuestionEntity question : questionRepository.findAll()) {
             if (question.getId().equals(questionId)) {
                 model.addAttribute("answer", answer);
 
-                answer.setId(UUID.randomUUID());
+                answer.setId(new Random().nextLong());
+                answer.setQuestion(question);
                 answerRepository.save(answer);
 
                 Set<AnswerEntity> answers = question.getAnswers();

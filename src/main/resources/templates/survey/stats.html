@@ -45,9 +45,9 @@
                         <div class="card h-100">
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${question.getQuestion()}"></h5>
-<!--                                <div th:each="answer: ${answers}">-->
-<!--                                    <p class="card-subtitle mb-2 text-muted" th:text="${answer.getAnswer() + ' - ' + answer.getTimesAnswered()}"></p>-->
-<!--                                </div>-->
+                                <div th:each="answer: ${answers}">
+                                    <p class="card-subtitle mb-2 text-muted" th:text="${answer.getAnswer() + ' - ' + answer.getTimesAnswered()}"></p>
+                                </div>
                             </div>
                         </div>
                     </div>

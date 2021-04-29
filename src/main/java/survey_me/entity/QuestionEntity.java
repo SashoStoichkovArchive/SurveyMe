@@ -2,35 +2,43 @@ package survey_me.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
 public class QuestionEntity {
     @Id
-    @GenericGenerator(name = "uuid", strategy = "uuid")
-    private UUID id;
+    private Long id;
     private String question;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
     private Set<AnswerEntity> answers;
 
-    private Boolean isRequired = Boolean.FALSE;
+    @JoinColumn
+    @ManyToOne
+    private SurveyEntity survey;
+
+    private Boolean isRequired = Boolean.TRUE;
     private Boolean isMultiple = Boolean.FALSE;
 
     public QuestionEntity() {
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public SurveyEntity getSurvey() {
+        return survey;
+    }
+
+    public void setSurvey(SurveyEntity survey) {
+        this.survey = survey;
     }
 
     public String getQuestion() {
