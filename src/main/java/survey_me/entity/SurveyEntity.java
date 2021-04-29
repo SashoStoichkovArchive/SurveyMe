@@ -20,8 +20,8 @@ public class SurveyEntity {
     @OneToMany(fetch = FetchType.EAGER)
     private Set<QuestionEntity> questions;
 
-    private Boolean isClosed = Boolean.FALSE;
-    private Boolean isPublic = Boolean.TRUE;
+    private Boolean isClosed = false;
+    private Boolean isPublic = true;
 
     public SurveyEntity() {
     }

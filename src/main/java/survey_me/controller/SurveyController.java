@@ -28,38 +28,17 @@ public class SurveyController {
     @GetMapping(path = "/create")
     public String createSurveyForm(Model model) {
         model.addAttribute("survey", new SurveyEntity());
-        return "survey/survey_create";
+        return "survey/create";
     }
 
     @PostMapping(path = "/create")
-    public void createSurvey(@RequestBody Map<String, String> data){
-        SurveyEntity survey = new SurveyEntity();
+    public String createSurvey(@ModelAttribute SurveyEntity survey, Model model) {
+        model.addAttribute("survey", survey);
 
         survey.setId(UUID.randomUUID());
-        survey.setName(data.get("survey-title"));
-        survey.setDescription(data.get("survey-description"));
+        surveyRepository.save(survey);
 
-//        TODO: This should happen (pseudocode)
-//        for (question in data) {
-//            QuestionEntity question = new QuestionEntity();
-//            question.setQuestion(data.get(question.question-title-n));
-//            question.setRequired(data.get(question.required-n));
-//            question.setMultiple(data.get(question.multiple-n));
-//
-//            List<AnswerEntity> answers = new ArrayList<>();
-//
-//            for (answer in data) {
-//                AnswerEntity answer = new AnswerEntity();
-//                answer.setAnswer(data.get(question.answer.text));
-//                answerRepository.save(answer);
-//
-//                answers.add(answer);
-//            }
-//        }
-
-//        surveyRepository.save(survey);
-
-//        return "redirect:";
+        return "redirect:/question/add/" + survey.getId();
     }
 
 //    @PostMapping(path = "/edit/{id}")
@@ -70,23 +49,21 @@ public class SurveyController {
 
     @GetMapping(path = "/stats/{id}")
     public String getStatsForSurvey(@PathVariable UUID id, Model model) {
-        Optional<SurveyEntity> possibleSurvey = surveyRepository.findById(id);
+        for (SurveyEntity survey : surveyRepository.findAll()) {
+            if (survey.getId().equals(id)) {
+                Set<QuestionEntity> questions = survey.getQuestions();
+                List<AnswerEntity> answers = new ArrayList<>();
 
-        if (possibleSurvey.isPresent()) {
-            SurveyEntity survey = possibleSurvey.get();
+                for (QuestionEntity question : questions) {
+                    answers.addAll(question.getAnswers());
+                }
 
-            List<QuestionEntity> questions = new ArrayList<>(survey.getQuestions());
-            List<AnswerEntity> answers = new ArrayList<>();
+                model.addAttribute("survey", survey);
+                model.addAttribute("questions", questions);
+                model.addAttribute("answers", answers);
 
-            for (QuestionEntity question : questions) {
-                answers.addAll(question.getAnswers());
+                return "survey/stats";
             }
-
-            model.addAttribute("survey", survey);
-            model.addAttribute("questions", questions);
-            model.addAttribute("answers", answers);
-
-            return "survey/stats";
         }
 
         return "error";

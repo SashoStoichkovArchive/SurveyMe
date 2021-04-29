@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>All Surveys - SurveyMe</title>
+    <title>Add Question - SurveyMe</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -31,25 +31,35 @@
         </div>
     </nav>
 
-    <div class="card">
-        <h1 class="card-header text-center">All Surveys</h1>
+    <div class="card text-center">
+        <h1 class="card-header">Add Question!</h1>
         <div class="card-body">
             <div class="container">
-                <div class="row row-cols-1 row-cols-md-3">
-                    <div class="col mb-4" th:each="survey: ${surveys}">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title" th:text="${survey.getName()}"></h5>
-                                <p class="card-subtitle mb-2 text-muted" th:text="${survey.getDescription()}"></p>
-                                <a th:href="@{/survey/vote/{id}(id = ${survey.getId()})}" class="card-link">Vote</a>
-                                <a th:href="@{/survey/stats/{id}(id = ${survey.getId()})}" class="card-link">Stats</a>
-                            </div>
-                        </div>
+                <form action="#" th:action="@{/question/add/{id}(id = ${surveyId})}" th:object="${question}" method="post">
+                    <div class="form-group">
+                        <label for="question-title">Question title</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="question-title"
+                                placeholder="Enter question title"
+                                th:field="*{question}"
+                        >
                     </div>
-                </div>
+
+                    <div class="form-check form-switch form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="required" checked disabled>
+                        <label class="form-check-label" for="required">Required</label>
+                    </div>
+                    <div class="form-check form-switch form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="multiple" disabled>
+                        <label class="form-check-label" for="multiple">Multiple</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add answer</button>
+                </form>
             </div>
         </div>
-        <div class="card-footer text-muted text-center" th:text="${surveys.size() + ' Surveys'}"></div>
     </div>
 </body>
 </html>
