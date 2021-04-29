@@ -11,10 +11,7 @@ import survey_me.repository.AnswerRepository;
 import survey_me.repository.QuestionRepository;
 import survey_me.repository.SurveyRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RequestMapping("survey")
@@ -71,6 +68,27 @@ public class SurveyController {
 //    @PostMapping(path = "/vote/{id}")
 //    some func
 
-//    @GetMapping(path = "/stats/{id}")
-//    some func
+    @GetMapping(path = "/stats/{id}")
+    public String getStatsForSurvey(@PathVariable UUID id, Model model) {
+        Optional<SurveyEntity> possibleSurvey = surveyRepository.findById(id);
+
+        if (possibleSurvey.isPresent()) {
+            SurveyEntity survey = possibleSurvey.get();
+
+            List<QuestionEntity> questions = new ArrayList<>(survey.getQuestions());
+            List<AnswerEntity> answers = new ArrayList<>();
+
+            for (QuestionEntity question : questions) {
+                answers.addAll(question.getAnswers());
+            }
+
+            model.addAttribute("survey", survey);
+            model.addAttribute("questions", questions);
+            model.addAttribute("answers", answers);
+
+            return "survey/stats";
+        }
+
+        return "error";
+    }
 }
